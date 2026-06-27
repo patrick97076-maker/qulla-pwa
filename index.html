@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Qullamäggie Stock Checker</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input { padding: 10px; width: 200px; }
+    button { padding: 10px; margin-left: 10px; }
+    #result { margin-top: 20px; font-size: 18px; }
+  </style>
+</head>
+
+<body>
+  <h2>Qullamäggie Stock Checker</h2>
+
+  <input id="tickerInput" placeholder="Ticker eingeben (z.B. AAPL)">
+  <button onclick="checkStock()">Checken</button>
+
+  <div id="result"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
