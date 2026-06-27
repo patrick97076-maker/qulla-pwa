@@ -1,13 +1,18 @@
-self.addEventListener("install", e => {
-  e.waitUntil(
+self.addEventListener("install", event => {
+  event.waitUntil(
     caches.open("q-cache").then(cache => {
-      return cache.addAll(["/", "/index.html", "/app.js", "/manifest.json"]);
+      return cache.addAll([
+        "/qulla-pwa/",
+        "/qulla-pwa/index.html",
+        "/qulla-pwa/app.js",
+        "/qulla-pwa/manifest.json"
+      ]);
     })
   );
 });
 
-self.addEventListener("fetch", e => {
-  e.respondWith(
-    caches.match(e.request).then(resp => resp || fetch(e.request))
+self.addEventListener("fetch", event => {
+  event.respondWith(
+    fetch(event.request).catch(() => caches.match(event.request))
   );
 });
