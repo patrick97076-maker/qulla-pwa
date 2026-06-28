@@ -7,40 +7,44 @@ async function checkStock() {
     return;
   }
 
-  const url = "https://proxy.cors.sh/" + encodeURIComponent(
-    `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d`
-  );
+  // FMP API – 1‑Day Candles
+  const url = `https://financialmodelingprep.com/api/v3/historical-chart/1day/${ticker}?apikey=DEIN_FMP_KEY`;
 
   try {
-    const data = await fetch(url, {
-      headers: {
-        "x-cors-api-key": "live_a0d47c44fada3772075e4147495398d758ed12b99d989ed5"
-      }
-    }).then(r => r.json());
+    const data = await fetch(url).then(r => r.json());
 
-    const candles = data.chart.result[0].indicators.quote[0];
+    if (!Array.isArray(data) || data.length < 2) {
+      result.innerHTML = "Ticker nicht gefunden oder keine Daten.";
+      return;
+    }
 
-    const close = candles.close;
-    const high = candles.high;
-    const low = candles.low;
-    const volume = candles.volume;
+    // FMP liefert ein Array: [0] = heute, [1] = gestern
+    const today = data[0];
+    const yesterday = data[1];
 
-    const last = close.length - 1;
+    const closeToday = today.close;
+    const closeYesterday = yesterday.close;
 
-    const body = Math.abs(close[last] - close[last - 1]);
-    const range = high[last] - low[last];
+    const highToday = today.high;
+    const lowToday = today.low;
+
+    const volumeToday = today.volume;
+
+    // Durchschnittsvolumen der letzten 10 Kerzen
+    const volAvg = data.slice(0, 10).reduce((sum, c) => sum + c.volume, 0) / 10;
+
+    // Body & Range
+    const body = Math.abs(closeToday - closeYesterday);
+    const range = highToday - lowToday;
     const bodyPercent = body / range;
-
-    const volToday = volume[last];
-    const volAvg = volume.slice(last - 10, last).reduce((a, b) => a + b) / 10;
 
     let status = "";
 
-    if (bodyPercent < 0.15 && volToday < volAvg * 0.7) {
+    if (bodyPercent < 0.15 && volumeToday < volAvg * 0.7) {
       status = "Tightness → mögliches Pivot";
-    } else if (bodyPercent > 0.6 && close[last] < close[last - 1]) {
+    } else if (bodyPercent > 0.6 && closeToday < closeYesterday) {
       status = "Trend beschädigt / Distribution";
-    } else if (close[last] > high[last - 1]) {
+    } else if (closeToday > yesterday.high) {
       status = "Breakout → kaufbar";
     } else {
       status = "Kein Setup";
@@ -55,6 +59,7 @@ async function checkStock() {
   }
 }
 
+// Service Worker
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/qulla-pwa/service-worker.js");
 }
