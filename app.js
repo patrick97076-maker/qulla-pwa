@@ -7,8 +7,9 @@ async function checkStock() {
     return;
   }
 
-  const url = `https://proxy.cors.sh/${encodeURIComponent(`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d`
-                                                          )}´;
+  const url = `https://proxy.cors.sh/${encodeURIComponent(
+    `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d`
+  )}`;
 
   try {
     const data = await fetch(url, {
@@ -57,4 +58,3 @@ async function checkStock() {
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/qulla-pwa/service-worker.js");
 }
-
