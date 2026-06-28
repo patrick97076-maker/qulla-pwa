@@ -7,7 +7,7 @@ async function checkStock() {
     return;
   }
 
-  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d`;
+  const url = `https://corsproxy.io/?https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d`;
 
   try {
     const data = await fetch(url).then(r => r.json());
