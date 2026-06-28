@@ -8,7 +8,7 @@ async function checkStock() {
   }
 
   // FMP API – 1‑Day Candles
-  const url = `https://financialmodelingprep.com/api/v3/historical-chart/1day/${ticker}?apikey=DEIN_FMP_KEY`;
+  const url = `https://financialmodelingprep.com/api/v3/historical-chart/1day/${ticker}?apikey=N7sUm9pifMcVuX8goCBFVbigEd3heG5Q`;
 
   try {
     const data = await fetch(url).then(r => r.json());
