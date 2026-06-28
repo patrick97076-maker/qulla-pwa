@@ -7,10 +7,15 @@ async function checkStock() {
     return;
   }
 
-  const url = `https://api.codetabs.com/v1/proxy?quest=https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d`;
+  const url = `https://proxy.cors.sh/https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d`;
 
   try {
-    const data = await fetch(url).then(r => r.json());
+    const data = await fetch(url, {
+      headers: {
+        "x-cors-api-key": "live_a0d47c44fada3772075e4147495398d758ed12b99d989ed5"
+      }
+    }).then(r => r.json());
+
     const candles = data.chart.result[0].indicators.quote[0];
 
     const close = candles.close;
@@ -51,3 +56,4 @@ async function checkStock() {
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/qulla-pwa/service-worker.js");
 }
+
